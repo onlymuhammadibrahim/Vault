@@ -46,7 +46,8 @@ Build on Android:
 1) Run "buildozer init" in terminal
 
 2) change requirements in buildozer.spec file to:
-    requirements = python3,kivy,cryptography,mysql-connector-python,pymysql
+
+requirements = python3,kivy,cryptography,mysql-connector-python,pymysql
 
 3) Change application name and Add icon path spec file
 
@@ -58,18 +59,22 @@ Build on Android:
 
 Build on Windows:
 1) Run this command in CMD:
-    python -m PyInstaller --onefile --name vault --icon vault.ico main.py
+
+python -m PyInstaller --onefile --name vault --icon vault.ico main.py
 
 2) Keep spec file and delete other files that were created
 
 3) Add this to start of spec file:
-    from kivy_deps import sdl2, glew
+
+from kivy_deps import sdl2, glew
 
 4) Add this in exe at end of spec file and change console to False:
-    *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)]
+
+*[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)]
 
 5) Run this command:
-    python -m PyInstaller vault.spec
+
+python -m PyInstaller vault.spec
 
 6) You will get .exe in dist folder.
 
