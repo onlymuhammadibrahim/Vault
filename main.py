@@ -12,9 +12,9 @@ import pymysql
 import copy
 
 
-PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
-# PATH = 'C:\\CredentialsVault.txt'  #Windows
-#PATH = 'CredentialsVault.txt'  #Android
+# PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
+PATH = 'C:\\CredentialsVault.txt'  #Windows
+# PATH = 'CredentialsVault.txt'  #Android
 USERNAME = None
 PASSWORD = None
 HOST = None

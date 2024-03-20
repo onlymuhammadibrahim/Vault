@@ -47,13 +47,15 @@ Build on Android:
 
 2) change requirements in buildozer.spec file to:
 
-requirements = python3,kivy,cryptography,mysql-connector-python,pymysql
+requirements = python3,kivy,cryptography,pymysql
 
 3) Change application name and Add icon path spec file
 
-4) buildozer android debug
+4) Uncomment android.permissions line
 
-5) You will get .apk in bin folder
+5) buildozer android debug
+
+6) You will get .apk in bin folder
 
 
 
