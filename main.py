@@ -11,9 +11,9 @@ import os.path
 import pymysql
 
 
-PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
-#PATH = 'C:\\CredentialsVault.txt'  #Windows
-# PATH = 'CredentialsVault.txt'  #Android
+# PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
+PATH = 'C:\\CredentialsVault.txt'  #Windows
+#PATH = 'CredentialsVault.txt'  #Android
 USERNAME = None
 PASSWORD = None
 HOST = None
@@ -177,7 +177,7 @@ class CredentialsWindow(Screen):
                             Password VARCHAR(255)
                             )""")
             except pymysql.connect.Error as err:
-                popUp('Error', err)
+                pass
             
             self.reset()
             self.manager.current = 'loginwindow'
@@ -200,8 +200,8 @@ class ListWindow(Screen):
 
     def on_enter(self):
         finalString  = ''
-        sortedRecords =  sorted(ALLRECORDS, key=lambda d: d[1])
-        for i in sortedRecords:
+        ALLRECORDS.sort(key = lambda x: x[1].lower())
+        for i in ALLRECORDS:
             finalString = finalString + str(i[0]) + ' ' + i[1] + '\n' + i[2] + '\n\n'
         self.passwords.text = finalString
 
@@ -304,40 +304,54 @@ kv = Builder.load_string('''WindowManager:
     key: key
 
     BoxLayout:
-        orientation: 'vertical'
         size: root.width, root.height
+        orientation: 'vertical'
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Login Window'
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Password Manager'
+                font_size: 52
 
-        Label:
-            text: 'Please enter your Key'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.22)
+            Label:
+                size_hint: (0.1,1)
+                text: 'Key: '
+                font_size: 32
 
-        TextInput:
-            id: key
-            multiline: False
-            password: True
+            TextInput:
+                id: key 
+                multiline: False
+                password: True
         
-        Button:
-            text: 'Login'
-            font_size: 32
-            on_release:
-                root.validate()
-                root.manager.transition.direction = 'left'
-        Button:
-            text: 'Edit Details'
-            font_size: 32
-            on_release:
-                app.root.current = 'credentialswindow'
-                root.manager.transition.direction = 'right'
-        Button:
-            text: 'Get new Key'
-            font_size: 32
-            on_release:
-                app.root.current = 'keywindow'
-                root.manager.transition.direction = 'down'
+        BoxLayout:
+            size_hint: (0.3,0.3)
+            pos_hint: {'center_x': 0.5}
+            
+            Button:
+                text: 'Login'
+                font_size: 32
+                on_release:
+                    root.validate()
+                    root.manager.transition.direction = 'left'
+        BoxLayout:
+            spacing: 100
+            Button:
+                size_hint: (0.3,0.3)
+                text: 'Edit Details'
+                font_size: 32
+                on_release:
+                    app.root.current = 'credentialswindow'
+                    root.manager.transition.direction = 'right'
+            Button:
+                text: 'Get new Key'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    app.root.current = 'keywindow'
+                    root.manager.transition.direction = 'down'
 
 <KeyWindow>:
     name: 'keywindow'
@@ -345,28 +359,44 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Generate new Key'
-            font_size: 32
 
-        TextInput:
-            text: root.key
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Generate new Key'
+                font_size: 52
+                         
+        BoxLayout:
+            size_hint: (1,0.22)
+            Label:
+                size_hint: (0.1,1)
+                text: 'Key: '
+                font_size: 32
+
+            TextInput:
+                text: root.key
+                font_size: 32
         
-        Button:
-            text: 'Generate'
-            font_size: 32
-            on_release:
-                root.generate()
-            
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                root.reset()
-                app.root.current = 'loginwindow'
-                root.manager.transition.direction = 'up'
+        BoxLayout:
+            spacing: 100
+                
+            Button:
+                text: 'Back'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    root.reset()
+                    app.root.current = 'loginwindow'
+                    root.manager.transition.direction = 'up'
+                         
+            Button:
+                text: 'Generate'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    root.generate()
 
 <PasswordWindow>:
     name: 'passwordwindow'
@@ -374,29 +404,43 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Generate Strong Password'
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Generate Strong Password'
+                font_size: 52
 
-        TextInput:
-            text: root.key
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.22)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Password: '
+                font_size: 32
+                         
+            TextInput:
+                text: root.key
+                font_size: 32
         
-        Button:
-            text: 'Generate'
-            font_size: 32
-            on_release:
-                root.generate()
-            
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                root.reset()
-                app.root.current = 'mainwindow'
-                root.manager.transition.direction = 'right'
+        BoxLayout:    
+            spacing: 100
+            Button:
+                size_hint: (0.3,0.3)
+                text: 'Back'
+                font_size: 32
+                on_release:
+                    root.reset()
+                    app.root.current = 'mainwindow'
+                    root.manager.transition.direction = 'right'
 
+            Button:
+                size_hint: (0.3,0.3)
+                text: 'Generate'
+                font_size: 32
+                on_release:
+                    root.generate()
+        
 <CredentialsWindow>:
     name: 'credentialswindow'
     host : host
@@ -408,67 +452,88 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Credentials Window'
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Credentials'
+                font_size: 52
 
-        Label:
-            text: 'host'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Host: '
+                font_size: 32
 
-        TextInput:
-            id: host
-            multiline: False
+            TextInput:
+                id: host
+                multiline: False
                          
-        Label:
-            text: 'db'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'DB: '
+                font_size: 32
 
-        TextInput:
-            id: db
-            multiline: False
+            TextInput:
+                id: db
+                multiline: False
                          
-        Label:
-            text: 'Username'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Username: '
+                font_size: 32
 
-        TextInput:
-            id: username
-            multiline: False
+            TextInput:
+                id: username
+                multiline: False
 
-        Label:
-            text: 'Password'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Password: '
+                font_size: 32
 
-        TextInput:
-            id: password
-            multiline: False
-            password: True
+            TextInput:
+                id: password
+                multiline: False
+                password: True
 
-        Label:
-            text: 'Key'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Key: '
+                font_size: 32
 
-        TextInput:
-            id: key
-            multiline: False
-            password: True
+            TextInput:
+                id: key
+                multiline: False
+                password: True
         
-        Button:
-            text: 'Save'
-            font_size: 32
-            on_release:
-                root.validate()
-                root.manager.transition.direction = 'left'
-
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                root.reset()
-                app.root.current = 'loginwindow'
-                root.manager.transition.direction = 'left'
+        BoxLayout:
+            spacing: 100
+            Button:
+                text: 'Back'
+                size_hint: (0.7,0.7)
+                font_size: 32
+                on_release:
+                    root.reset()
+                    app.root.current = 'loginwindow'
+                    root.manager.transition.direction = 'left'
+            Button:
+                text: 'Save'
+                size_hint: (0.7,0.7)
+                font_size: 32
+                on_release:
+                    root.validate()
+                    root.manager.transition.direction = 'left'
 
 <MainWindow>:
     name: 'mainwindow'
@@ -476,31 +541,38 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        padding: 50
 
         Label:
-            text: 'Main Window'
-            font_size: 32
+            text: 'Dashboard'
+            font_size: 52
         
-        Button:
-            text: 'List'
-            font_size: 32
-            on_release:
-                app.root.current = 'listwindow'
-                root.manager.transition.direction = 'left'
-
-        Button:
-            text: 'Add'
-            font_size: 32
-            on_release:
-                app.root.current = 'addwindow'
-                root.manager.transition.direction = 'left'
-
-        Button:
-            text: 'Generate Strong Password'
-            font_size: 32
-            on_release:
-                app.root.current = 'passwordwindow'
-                root.manager.transition.direction = 'left'
+        BoxLayout:
+            spacing: 100
+            Button:
+                text: 'Add'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    app.root.current = 'addwindow'
+                    root.manager.transition.direction = 'left'
+            Button:
+                text: 'List'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    app.root.current = 'listwindow'
+                    root.manager.transition.direction = 'left'
+        BoxLayout:
+        BoxLayout:
+            size_hint: (0.3,0.3)
+            pos_hint: {'center_x': 0.5}
+            Button:
+                text: 'Generate Password'
+                font_size: 32
+                on_release:
+                    app.root.current = 'passwordwindow'
+                    root.manager.transition.direction = 'left'
 
 <ListWindow>:
     name: 'listwindow'
@@ -509,38 +581,50 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        TextInput:
-            id: passwords
-            font_size: 32
+        BoxLayout:
+            padding: (0,0,0,-500)
+            TextInput:
+                id: passwords
+                font_size: 32
 
-        Button:
-            text: 'View'
-            font_size: 32
-            on_release:
-                app.root.current = 'viewwindow'
-                root.manager.transition.direction = 'left'
+        BoxLayout:
+        BoxLayout:
+        BoxLayout:
+            size_hint: (0.3,0.3)
+            pos_hint: {'center_x': 0.5}
+            Button:
+                text: 'View'
+                font_size: 32
+                on_release:
+                    app.root.current = 'viewwindow'
+                    root.manager.transition.direction = 'left'
 
-        Button:
-            text: 'Delete'
-            font_size: 32
-            on_release:
-                app.root.current = 'deletewindow'
-                root.manager.transition.direction = 'left'
-
-        Button:
-            text: 'Update'
-            font_size: 32
-            on_release:
-                app.root.current = 'updatewindow'
-                root.manager.transition.direction = 'left'
-        
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                app.root.current = 'mainwindow'
-                root.manager.transition.direction = 'right'
+        BoxLayout:
+            spacing: 75
+            Button:
+                text: 'Back'
+                font_size: 32
+                size_hint: (0.3,0.3)
+                on_release:
+                    app.root.current = 'mainwindow'
+                    root.manager.transition.direction = 'right'
+            Button:
+                text: 'Update'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    app.root.current = 'updatewindow'
+                    root.manager.transition.direction = 'left'
+            Button:
+                text: 'Delete'
+                size_hint: (0.3,0.3)
+                font_size: 32
+                on_release:
+                    app.root.current = 'deletewindow'
+                    root.manager.transition.direction = 'left'
 
 <ViewWindow>:
     name: 'viewwindow'
@@ -552,52 +636,75 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Enter ID to View'
-            font_size: 32
-
-        TextInput:
-            id: idnumber
-            multiline: False
-
-        Label:
-            text: 'Name'
-            font_size: 32
-
-        TextInput:
-            id: passwordname
-            multiline: False
-
-        Label:
-            text: 'Email'
-            font_size: 32
-
-        TextInput:
-            id: email
-            multiline: False
-
-        Label:
-            text: 'Password'
-            font_size: 32
-
-        TextInput:
-            id: password
-            multiline: False
-
-        Button:
-            text: 'Get'
-            font_size: 32
-            on_release:
-                root.get_details()
+        BoxLayout:
+            Label:
+                text: 'View Password'
+                font_size: 52
         
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                root.reset()
-                app.root.current = 'listwindow'
-                root.manager.transition.direction = 'right'
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Enter ID: '
+                font_size: 32
+                         
+            TextInput:
+                id: idnumber
+                multiline: False
+
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Name: '
+                font_size: 32
+
+            TextInput:
+                id: passwordname
+                multiline: False
+
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Email: '
+                font_size: 32
+
+            TextInput:
+                id: email
+                multiline: False
+
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Password: '
+                font_size: 32
+
+            TextInput:
+                id: password
+                multiline: False
+
+        BoxLayout:
+            spacing: 100
+            Button:
+                text: 'Back'
+                font_size: 32
+                size_hint: (0.7,.7)
+                on_release:
+                    root.reset()
+                    app.root.current = 'listwindow'
+                    root.manager.transition.direction = 'right'
+            Button:
+                text: 'Get'
+                size_hint: (0.7,0.7)
+                font_size: 32
+                on_release:
+                    root.get_details()
+        
 
 <AddWindow>:
     name: 'addwindow'
@@ -608,49 +715,66 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Add new password'
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Add new password'
+                font_size: 52
 
-        Label:
-            text: 'Name'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Name: '
+                font_size: 32
 
-        TextInput:
-            id: passwordname
-            multiline: False
+            TextInput:
+                id: passwordname
+                multiline: False
         
-        Label:
-            text: 'Email'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Email: '
+                font_size: 32
 
-        TextInput:
-            id: email
-            multiline: False
+            TextInput:
+                id: email
+                multiline: False
 
-        Label:
-            text: 'Password'
-            font_size: 32
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Password: '
+                font_size: 32
 
-        TextInput:
-            id: password
-            multiline: False
-            password: True
+            TextInput:
+                id: password
+                multiline: False
+                password: True
         
-        Button:
-            text: 'Save'
-            font_size: 32
-            on_release:
-                root.store()
-                root.manager.transition.direction = 'right'
-        
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                app.root.current = 'mainwindow'
-                root.manager.transition.direction = 'right'
+        BoxLayout:
+            spacing: 100
+            Button:
+                text: 'Back'
+                size_hint: (0.5,0.5)
+                font_size: 32
+                on_release:
+                    app.root.current = 'mainwindow'
+                    root.manager.transition.direction = 'right'
+            Button:
+                text: 'Save'
+                font_size: 32
+                size_hint: (0.5,0.5)
+                on_release:
+                    root.store()
+                    root.manager.transition.direction = 'right'
+            
+            
 
 <DeleteWindow>:
     name: 'deletewindow'
@@ -659,29 +783,42 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Enter ID to Delete'
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Delete Password'
+                font_size: 52
+                         
+        BoxLayout:
+            size_hint: (1,0.26)
+            Label:
+                size_hint: (0.15,1)
+                text: 'Enter ID: '
+                font_size: 32
 
-        TextInput:
-            id: idnumber
-            multiline: False
+            TextInput:
+                id: idnumber
+                multiline: False
         
-        Button:
-            text: 'Delete'
-            font_size: 32
-            on_release:
-                root.delete()
+        BoxLayout:
+            spacing: 100
+            Button:
+                text: 'Back'
+                font_size: 32
+                size_hint: (0.7,.2)
+                on_release:
+                    root.reset()
+                    app.root.current = 'listwindow'
+                    root.manager.transition.direction = 'right'         
+            Button:
+                text: 'Delete'
+                size_hint: (0.7,.2)
+                font_size: 32
+                on_release:
+                    root.delete()
         
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                root.reset()
-                app.root.current = 'listwindow'
-                root.manager.transition.direction = 'right'
-
 <UpdateWindow>:
     name: 'updatewindow'
     idnumber: idnumber
@@ -690,37 +827,55 @@ kv = Builder.load_string('''WindowManager:
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
+        spacing: 50
+        padding: 50
 
-        Label:
-            text: 'Enter ID to Update'
-            font_size: 32
+        BoxLayout:
+            Label:
+                text: 'Update Password'
+                font_size: 52
 
-        TextInput:
-            id: idnumber
-            multiline: False
+        BoxLayout:
+            size_hint: (1,0.26)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Enter ID: '
+                font_size: 32
 
-        Label:
-            text: 'Password'
-            font_size: 32
+            TextInput:
+                id: idnumber
+                multiline: False
 
-        TextInput:
-            id: password
-            multiline: False
-            password: True
+        BoxLayout:
+            size_hint: (1,0.26)
+            Label:
+                size_hint: (0.2,1)
+                text: 'Password: '
+                font_size: 32
+
+            TextInput:
+                id: password
+                multiline: False
+                password: True
         
-        Button:
-            text: 'Update'
-            font_size: 32
-            on_release:
-                root.update()
         
-        Button:
-            text: 'Back'
-            font_size: 32
-            on_release:
-                root.reset()
-                app.root.current = 'listwindow'
-                root.manager.transition.direction = 'right' ''')
+        
+        BoxLayout:
+            spacing: 100
+            Button:
+                text: 'Back'
+                font_size: 32
+                size_hint: (0.7,.2)
+                on_release:
+                    root.reset()
+                    app.root.current = 'listwindow'
+                    root.manager.transition.direction = 'right' 
+            Button:
+                text: 'Update'
+                font_size: 32
+                size_hint: (0.7,.2)
+                on_release:
+                    root.update()''')
 
 def popUp(heading, message):
     pop = Popup(title=heading,
