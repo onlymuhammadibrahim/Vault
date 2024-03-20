@@ -21,12 +21,12 @@ As we are using a free database, it is vital to back it up weekly or monthly to 
 4) Click the export tab
 5) Then click export
 
+
+---------------------------------------------------
+
 For Devs only:
 
 Build on MacOs:
-
-Mac OS:
-
 1) Change Path in main.py file to the mac one.
 
 2) Run this command in terminal
@@ -40,8 +40,9 @@ pyinstaller -y --clean --windowed --name vault --icon vault.ico \
 
 3) You will get .app file in dist folder
 
-Build on Android:
 
+
+Build on Android:
 1) Run "buildozer init" in terminal
 
 2) change requirements in buildozer.spec file to:
@@ -53,8 +54,9 @@ Build on Android:
 
 5) You will get .apk in bin folder
 
-Build on Windows:
 
+
+Build on Windows:
 1) Run this command in CMD:
     python -m PyInstaller --onefile --name vault --icon vault.ico main.py
 
