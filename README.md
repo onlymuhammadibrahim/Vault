@@ -29,14 +29,14 @@ For Devs only:
 Build on MacOs:
 1) Change Path in main.py file to the mac one.
 
-2) Run this command in terminal
+2) Replace path of main.py in the following command and run it in terminal
 
 pyinstaller -y --clean --windowed --name vault --icon vault.ico \
   --exclude-module _tkinter \
   --exclude-module Tkinter \
   --exclude-module enchant \
   --exclude-module twisted \
-  /Users/ibrahim/Downloads/vault/main.py
+  <path to main.py file>
 
 3) You will get .app file in dist folder
 
