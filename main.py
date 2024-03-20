@@ -9,10 +9,11 @@ import random
 import array
 import os.path
 import pymysql
+import copy
 
 
-# PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
-PATH = 'C:\\CredentialsVault.txt'  #Windows
+PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
+# PATH = 'C:\\CredentialsVault.txt'  #Windows
 #PATH = 'CredentialsVault.txt'  #Android
 USERNAME = None
 PASSWORD = None
@@ -199,10 +200,11 @@ class ListWindow(Screen):
     passwords = ObjectProperty(None)
 
     def on_enter(self):
-        finalString  = ''
-        ALLRECORDS.sort(key = lambda x: x[1].lower())
-        for i in ALLRECORDS:
-            finalString = finalString + str(i[0]) + ' ' + i[1] + '\n' + i[2] + '\n\n'
+        finalString  = 'ID|Name|Email\n\n'
+        records = copy.deepcopy(ALLRECORDS)
+        records.sort(key = lambda x: x[1].lower())
+        for i in records:
+            finalString = finalString + str(i[0]) + ' ' + i[1] + ' ' + i[2] + '\n\n'
         self.passwords.text = finalString
 
 class ViewWindow(Screen):
