@@ -12,8 +12,8 @@ import pymysql
 import copy
 
 
-# PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
-PATH = 'C:\\CredentialsVault.txt'  #Windows
+PATH = '/Users/Shared/CredentialsVault.txt'  #Mac
+# PATH = 'C:\\CredentialsVault.txt'  #Windows
 # PATH = 'CredentialsVault.txt'  #Android
 USERNAME = None
 PASSWORD = None
@@ -70,6 +70,11 @@ def insert_new_record(name, email, password):
 def find_one(id):
     
     CURSOR.execute(f"SELECT * FROM Vault where _id = {id}")
+    return CURSOR.fetchall()
+
+def find_string(subString):
+
+    CURSOR.execute(f"SELECT * FROM Vault WHERE _id LIKE '%{subString}%' OR Name LIKE '%{subString}%' OR Email LIKE '%{subString}%'")
     return CURSOR.fetchall()
 
 def update_one(id, password):
@@ -208,6 +213,26 @@ class ListWindow(Screen):
         finalString = finalString + '\n\nTotal Passwords: ' + str(len(records))
         self.passwords.text = finalString
 
+class FindWindow(Screen):
+    listOfFindPasswords = ObjectProperty(None)
+    inputString = ObjectProperty(None)
+
+    def find(self):
+        finalString  = 'ID|Name|Email\n\n'
+        records = find_string(str(self.inputString.text))
+
+        list(records).sort(key = lambda x: x[1].lower())
+        
+        for i in records:
+            finalString = finalString + str(i[0]) + ' ' + i[1] + ' ' + i[2] + '\n\n'
+        
+        finalString = finalString + '\n\nTotal Passwords: ' + str(len(records))
+        self.listOfFindPasswords.text = finalString
+
+    def reset(self):
+        self.listOfFindPasswords.text = ''
+        self.inputString.text = ''
+
 class ViewWindow(Screen):
     idnumber = ObjectProperty(None)
     passwordname = ObjectProperty(None)
@@ -297,6 +322,7 @@ kv = Builder.load_string('''WindowManager:
     CredentialsWindow:
     MainWindow:
     ListWindow:
+    FindWindow:
     ViewWindow:
     AddWindow:
     DeleteWindow:
@@ -598,11 +624,18 @@ kv = Builder.load_string('''WindowManager:
         BoxLayout:
             size_hint: (0.3,0.3)
             pos_hint: {'center_x': 0.5}
+            spacing: 100
             Button:
                 text: 'View'
                 font_size: 32
                 on_release:
                     app.root.current = 'viewwindow'
+                    root.manager.transition.direction = 'left'
+            Button:
+                text: 'Find'
+                font_size: 32
+                on_release:
+                    app.root.current = 'findwindow'
                     root.manager.transition.direction = 'left'
 
         BoxLayout:
@@ -628,6 +661,52 @@ kv = Builder.load_string('''WindowManager:
                 on_release:
                     app.root.current = 'deletewindow'
                     root.manager.transition.direction = 'left'
+<FindWindow>:
+    name: 'findwindow'
+    listOfFindPasswords: listOfFindPasswords
+    inputString: inputString
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: 50
+        padding: 50
+
+        BoxLayout:
+            padding: (0,0,0,-500)
+            TextInput:
+                id: listOfFindPasswords
+                font_size: 32
+
+        BoxLayout:
+        BoxLayout:
+        BoxLayout:
+            size_hint: (1,0.56)
+            Label:
+                size_hint: (0.15,1)
+                text: 'Input: '
+                font_size: 32
+                         
+            TextInput:
+                id: inputString
+                multiline: False
+
+        BoxLayout:
+            spacing: 75
+            Button:
+                text: 'Back'
+                font_size: 32
+                size_hint: (0.3,0.5)
+                on_release:
+                    root.reset()
+                    app.root.current = 'listwindow'
+                    root.manager.transition.direction = 'right'
+            Button:
+                text: 'Search'
+                size_hint: (0.3,0.5)
+                font_size: 32
+                on_release:
+                    root.find()
 
 <ViewWindow>:
     name: 'viewwindow'
