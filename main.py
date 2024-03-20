@@ -205,6 +205,7 @@ class ListWindow(Screen):
         records.sort(key = lambda x: x[1].lower())
         for i in records:
             finalString = finalString + str(i[0]) + ' ' + i[1] + ' ' + i[2] + '\n\n'
+        finalString = finalString + '\n\nTotal Passwords: ' + str(len(records))
         self.passwords.text = finalString
 
 class ViewWindow(Screen):
