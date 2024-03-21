@@ -4,7 +4,7 @@ This Vault app is a password manager available on Windows/ MacOS and Android. It
 
 Usage:
 
-1) Download the app from https://bit.ly/492lrHo
+1) Download the app from https://bit.ly/3IMpf4J
 2) Since we will need a database as a free alternative, I would suggest to use https://www.clever-cloud.com/
 3) Sign Up and create a MySQL addon with a free tier.
 4) Now note down Database Credentials.
@@ -36,7 +36,7 @@ pyinstaller -y --clean --windowed --name vault --icon vault.ico \
   --exclude-module Tkinter \
   --exclude-module enchant \
   --exclude-module twisted \
-  <path to main.py file>
+  /Users/ibrahim/Downloads/github/Vault/main.py
 
 3) You will get .app file in dist folder
 
